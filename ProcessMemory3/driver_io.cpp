@@ -1,7 +1,7 @@
 #include "driver_io.h"
 #include "memory_inspector.h"
-// ниже чисто база 
 _Use_decl_annotations_
+//обработка операций открытия и закрытия
 NTSTATUS MemoryInspectorCreateClose(PDEVICE_OBJECT DeviceObject, PIRP Irp) {
     UNREFERENCED_PARAMETER(DeviceObject);
     Irp->IoStatus.Status = STATUS_SUCCESS;
@@ -9,8 +9,8 @@ NTSTATUS MemoryInspectorCreateClose(PDEVICE_OBJECT DeviceObject, PIRP Irp) {
     IoCompleteRequest(Irp, IO_NO_INCREMENT);
     return STATUS_SUCCESS;
 }
-// тут тоже
 _Use_decl_annotations_
+//  основной интерфейс для взаимодействия с драйвером из юзер мод
 NTSTATUS MemoryInspectorDeviceControl(PDEVICE_OBJECT DeviceObject, PIRP Irp) {
     UNREFERENCED_PARAMETER(DeviceObject);
     auto stack = IoGetCurrentIrpStackLocation(Irp);
