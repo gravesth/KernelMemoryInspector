@@ -36,10 +36,10 @@ NTSTATUS GetProcessMemoryRegions(ULONG pid, PIRP Irp, PIO_STACK_LOCATION stack) 
         address = (PVOID)((ULONG_PTR)mbi.BaseAddress + mbi.RegionSize);
     }
 
-    KeUnstackDetachProcess(&apcState); //читайте доку лень объяснять
+    KeUnstackDetachProcess(&apcState);
     //https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/ntifs/nf-ntifs-keunstackdetachprocess
     ObDereferenceObject(process);
-    // здесб копирование данных в выходной буфер
+    // копирование данных в выходной буфер
     if (regionCount > 0 &&
         stack->Parameters.DeviceIoControl.OutputBufferLength >= regionCount * sizeof(MemoryRegion)) {
         RtlCopyMemory(Irp->AssociatedIrp.SystemBuffer, regions,
@@ -47,6 +47,5 @@ NTSTATUS GetProcessMemoryRegions(ULONG pid, PIRP Irp, PIO_STACK_LOCATION stack) 
         Irp->IoStatus.Information = regionCount * sizeof(MemoryRegion);
         return STATUS_SUCCESS;
     }
-
     return STATUS_BUFFER_TOO_SMALL;
 } 
